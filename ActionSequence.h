@@ -16,12 +16,12 @@ public:
 
   ~ActionSequence();
 
-  float Update(float dt) override;
-
-  void Push(ActionBase * action);
+  void Add(ActionBase * action);
 
 private:
   ActionSequence();
+
+  float SpecializedUpdate(float dt) override;
 
   //ActionSequence and associated classes are not meant to be copied
   ActionSequence & operator=(const ActionSequence &) = delete;
