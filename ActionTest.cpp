@@ -2,74 +2,64 @@
 //All content copyright (C) Griffin Downs 2016. All rights reserved.
 
 #include <cstdio>           //printf
+#include <chrono>           //high_resolution_clock, time_point, duration, duration_cast
 #include "Action.h"         //Action
 #include "ActionSequence.h" //ActionSequence
 #include "ActionGroup.h"    //ActionGroup
 #include "Ease.h"           //Ease::Function typedef, any Ease functions
 
-void TestEase(Ease::Function fn);
-void TestGroup();
+typedef std::chrono::high_resolution_clock testClock;
+typedef std::chrono::time_point<std::chrono::high_resolution_clock> timePoint;
+typedef std::chrono::duration<float> fSeconds;
+
+void TestEase(Ease::Function fn, bool realTime = true);
 
 int main()
 {
-  //TestEase(Ease::OutQuad);
-  TestGroup();
+  TestEase(Ease::OutQuad, true);
 }
 
 //Creates a single variable Action which tweens a float from startVal to endVal
 //fn: Function used for easing
-void TestEase(Ease::Function fn)
+//startVal: Initial value of eased value
+//endVal: End value of eased value
+void TestEase(Ease::Function fn, bool realTime)
 {
-  //Create a value, and an action to ease it to a target
   float x = 0;
   Action * action = Action::Make(x, 100.f, 1.f, fn);
   
-  const float dt = 1.f/60.f;
   float time = 0.f;
+  float timeLast;
+  float dt;
+  timePoint epoch = testClock::now();
+  int num = 1;
 
-  while(time < 0.99f)
+  std::printf("%9.4f %7.4f\n", x, time);
+  while(time < 1.f)
   {
-    //Print out the current value of x and the time
-    std::printf("%9.4f %7.4f\n", x, time);
+    if(static_cast<int>(time * 100.f) % 2 == num)
+    {
+      if(num == 0)
+        num = 1;
+      else
+        num = 0;
+      std::printf("%9.4f %7.4f\n", x, time);  
+    }
 
-    time += dt;
+    timeLast = time;
+    if(realTime)
+    {
+      time += std::chrono::duration_cast<fSeconds>(testClock::now() - epoch).count();
+      epoch = testClock::now();
+      dt = time - timeLast;
+    }
+    else
+      dt = 1.f/60.f;
 
-    //Increment x closer to its destination
     action->Update(dt);
   }
 
   std::printf("%9.4f %7.4f\n", x, time);
 
-  //Make sure we clean up our Action after creating it
   delete action;
-}
-
-void TestGroup()
-{
-  float n1 = 0.f, n2 = 0.f;
-
-  //Create an ActionGroup that is in charge of easing n1 and n2
-  ActionGroup * group = ActionGroup::Make();
-  group->Add(Action::Make(n1, 100.f, 1.f, Ease::Linear));
-  group->Add(Action::Make(n2, 100.f, 1.f, Ease::InQuad));
-
-  const float dt = 1.f/60.f;
-  float time = 0.f;
-
-  while(time < 0.99f)
-  {
-    //Print out the current value of n1, n2, and the time
-    std::printf("%9.4f %9.4f %7.4f\n", n1, n2, time);
-
-    time += dt;
-
-    //Increment n1 and n2 closer to their destination
-    group->Update(dt);
-  }
-
-  std::printf("%9.4f %9.4f %7.4f\n", n1, n2, time);
-  
-  //Because deletion of the two child Actions is handled by the ActionGroup, we
-  //don't have to worry about deleting the two Actions
-  delete group;
 }

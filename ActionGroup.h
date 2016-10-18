@@ -14,14 +14,12 @@ class ActionGroup final : public ActionBase
 public:
   static ActionGroup * Make();
 
-  ~ActionGroup();
+  float Update(float dt) override;
 
   void Add(ActionBase * action);
 
 private:
   ActionGroup();
-
-  float SpecializedUpdate(float dt) override;
 
   //ActionGroup and associated classes are not meant to be copied
   ActionGroup & operator=(const ActionGroup &) = delete;

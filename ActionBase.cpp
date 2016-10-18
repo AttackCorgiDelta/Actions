@@ -4,56 +4,7 @@
 #include "ActionBase.h"
 
 //ActionBase Constructor (protected)
-ActionBase::ActionBase() : delay(0.f), complete(false), paused(false) {}
-
-//Calls the SpecializedUpdate method of the derived class
-//Accounts for pausing and delaying
-float ActionBase::Update(float dt)
-{
-  //We don't want to update if the ActionBase is paused
-  if(paused)
-    return -1.f;
-
-  if(delay > 0.f)
-  {
-    //Decrement the delay by dt and check to see if it still hasn't gone off 
-    delay -= dt;
-    if(delay > 0.f)
-      return -1.f;
-    
-    //When we call SpecializedUpdate, we want to use the leftover dt
-    dt = 0.f - delay;
-  }
-
-  //Call the SpecializedUpdate, saving its return value for after checking if complete
-  float ret = SpecializedUpdate(dt);
-
-  //If the last SpecializedUpdate call completed the ActionBase, invoke the callback
-  if(complete)
-    callBack();
-
-  return ret;
-}
-
-void ActionBase::SetCallBack(CALLBACK callBack_)
-{
-  callBack = callBack_;
-}
-
-ActionBase::CALLBACK ActionBase::GetCallBack()
-{
-  return callBack;
-}
-
-float ActionBase::GetDelay() const
-{
-  return delay;
-}
-
-void ActionBase::SetDelay(const float delay_)
-{
-  delay = delay_;
-}
+ActionBase::ActionBase() : complete(false), paused(false) {}
 
 //Returns whether the ActionBase has completed its easing
 bool ActionBase::IsComplete() const
