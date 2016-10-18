@@ -12,7 +12,7 @@
 #include "Vector.h"     //Vec2, Vec3, Vec4
 
 //The main Action class. Eases a value into another value given a duration of time and another value
-//Note: Can only be dynamically allocated
+//Note: Can only be dynamically allocated via use of Make
 class Action final : public ActionBase
 {
 public:  
@@ -21,13 +21,13 @@ public:
   static Action * Make(Vec3 & target_, const Vec3 & endValue_, const float duration_, const Ease::Function fn_);
   static Action * Make(Vec4 & target_, const Vec4 & endValue_, const float duration_, const Ease::Function fn_);
 
-  float Update(float dt) override;
-
 private:
   Action(float & target_, const float endValue_, const float duration_, const Ease::Function fn_);
   Action(Vec2 & target_, const Vec2 & endValue_, const float duration_, const Ease::Function fn_);
   Action(Vec3 & target_, const Vec3 & endValue_, const float duration_, const Ease::Function fn_);
   Action(Vec4 & target_, const Vec4 & endValue_, const float duration_, const Ease::Function fn_);
+
+  float SpecializedUpdate(float dt) override;
 
   //Action and associated classes are not meant to be copied
   Action & operator=(const Action &) = delete;

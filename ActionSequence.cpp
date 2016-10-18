@@ -4,7 +4,7 @@
 #include "ActionSequence.h"
 
 //ActionSequence Static "Constructor" (public)
-//Note: Dynamically allocates an ActionSequence
+//Dynamically allocates an ActionSequence
 ActionSequence * ActionSequence::Make()
 {
   return new ActionSequence;
@@ -14,6 +14,7 @@ ActionSequence * ActionSequence::Make()
 ActionSequence::ActionSequence() : ActionBase() {}
 
 //ActionSequence Destructor
+//Deletes the memory pointed to by the contents of actionBases
 ActionSequence::~ActionSequence()
 {
   while(!actionBases.empty())
@@ -26,17 +27,14 @@ ActionSequence::~ActionSequence()
 //Updates the ActionSequence by bringing it closer to the endValue
 //dt: Amount to Update the ActionSequence by
 //Returns the leftover dt when this ActionSequence completes
-float ActionSequence::Update(float dt)
+float ActionSequence::SpecializedUpdate(float dt)
 {
-  //Return if the Sequence is paused
-  if(IsPaused()) 
-    return -1.f;
-
   //Update the ActionBase pointed to by the top of the queue
   //and update while recycling the dt from completed calls to Update
   while(dt > 0.f)
   {
-    //Get the top of the ActionBase queue and call Update
+    //Get the top of the ActionBase queue and call Update,
+    //setting dt to the result of the call
     ActionBase * top = actionBases.front();
     dt = top->Update(dt);
 
@@ -61,11 +59,13 @@ float ActionSequence::Update(float dt)
   return -1.f;
 }
 
-//Inserts an ActionBase pointer at the end and sets relevant paused information
-//actionBase: Pointer to the ActionBase to add
-void ActionSequence::Push(ActionBase * action)
+//Inserts an ActionBase pointer at the end of the ActionSequence and 
+//sets relevant paused/complete information
+//action: Pointer to the ActionBase to add
+void ActionSequence::Add(ActionBase * action)
 {
   SetPaused(false);
+  SetComplete(false);
   action->SetPaused(true);
   actionBases.push(action);
 }
