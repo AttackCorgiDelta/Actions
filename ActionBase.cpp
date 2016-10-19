@@ -4,7 +4,7 @@
 #include "ActionBase.h"
 
 //ActionBase Constructor (protected)
-ActionBase::ActionBase() : delay(0.f), complete(false), paused(false) {}
+ActionBase::ActionBase() : callBack(nullptr), delay(0.f), complete(false), paused(false) {}
 
 //Calls the SpecializedUpdate method of the derived class
 //Accounts for pausing and delaying
@@ -30,7 +30,8 @@ float ActionBase::Update(float dt)
 
   //If the last SpecializedUpdate call completed the ActionBase, invoke the callback
   if(complete)
-    callBack();
+    if(callBack != nullptr)
+      callBack();
 
   return ret;
 }

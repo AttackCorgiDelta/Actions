@@ -39,12 +39,10 @@ float ActionSequence::SpecializedUpdate(float dt)
     dt = top->Update(dt);
 
     //Pop and delete this ActionBase off of the queue if it's complete
-    //Unpause the next Action
     if(top->IsComplete())
     {
-      actionBases.pop();
       delete top;
-      actionBases.front()->SetPaused(false);
+      actionBases.pop();
     }
 
     //If the Sequence is empty, flag it for erasion
@@ -54,6 +52,8 @@ float ActionSequence::SpecializedUpdate(float dt)
       SetPaused(true);
       return dt;
     }
+    else //Unpause the next Action
+      actionBases.front()->SetPaused(false);
   }
 
   return -1.f;

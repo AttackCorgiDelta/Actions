@@ -131,9 +131,9 @@ float Action::SpecializedUpdate(float dt)
   currentTime += dt; 
 
   //If the Action is still Easing
-  if(currentTime <= duration) 
+  if(currentTime <= duration - 0.001f) 
   {
-    //Update each of the floats inside the Vec
+    //Update each of the floats inside the Vec and return
     for(size_t i = 0; i < vecSize; ++i)
       target[i] = (*fn)(currentTime, startValue[i], displacement[i], duration);
     return -1.f;
