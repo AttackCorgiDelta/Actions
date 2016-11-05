@@ -7,6 +7,7 @@
 #include <cstddef>      //size_t
 #include <cmath>        //abs
 #include <cstring>      //memcpy
+#include <memory>
 #include "ActionBase.h" //ActionBase
 #include "Ease.h"       //Ease::Function
 #include "Vector.h"     //Vec2, Vec3, Vec4
@@ -16,10 +17,10 @@
 class Action final : public ActionBase
 {
 public:  
-  static Action * Make(float & target_, const float endValue_, const float duration_, const Ease::Function fn_);
-  static Action * Make(Vec2 & target_, const Vec2 & endValue_, const float duration_, const Ease::Function fn_);
-  static Action * Make(Vec3 & target_, const Vec3 & endValue_, const float duration_, const Ease::Function fn_);
-  static Action * Make(Vec4 & target_, const Vec4 & endValue_, const float duration_, const Ease::Function fn_);
+  static std::unique_ptr<Action> Make(float & target_, const float endValue_, const float duration_, const Ease::Function fn_);
+  static std::unique_ptr<Action> Make(Vec2 & target_, const Vec2 & endValue_, const float duration_, const Ease::Function fn_);
+  static std::unique_ptr<Action> Make(Vec3 & target_, const Vec3 & endValue_, const float duration_, const Ease::Function fn_);
+  static std::unique_ptr<Action> Make(Vec4 & target_, const Vec4 & endValue_, const float duration_, const Ease::Function fn_);
 
 private:
   Action(float & target_, const float endValue_, const float duration_, const Ease::Function fn_);

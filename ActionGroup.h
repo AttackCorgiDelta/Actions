@@ -5,6 +5,7 @@
 #define ACTIONGROUP_H
 
 #include <list>         //list
+#include <memory>
 #include "ActionBase.h" //ActionBase
 
 //Holds a number of pointers to ActionBases which are all updated simultaneously
@@ -12,11 +13,9 @@
 class ActionGroup final : public ActionBase
 {
 public:
-  static ActionGroup * Make();
+  static std::unique_ptr<ActionGroup> Make();
 
-  ~ActionGroup();
-
-  void Add(ActionBase * action);
+  void Add(std::unique_ptr<ActionBase> action);
 
 private:
   ActionGroup();
@@ -28,7 +27,7 @@ private:
   ActionGroup(const ActionGroup &) = delete;
 
   //Container of pointers to ActionBases to be updated 
-  std::list<ActionBase *> actionBases;
+  std::list<std::unique_ptr<ActionBase>> actionBases;
 };
 
 #endif //ACTIONGROUP_H

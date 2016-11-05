@@ -12,24 +12,24 @@
 //duration_: How long it takes to get to the endValue
 //fn_: The Ease to be used to get the target to the endValue
 
-Action * Action::Make(float & target_, float endValue_, float duration_, const Ease::Function fn_)
+std::unique_ptr<Action> Action::Make(float & target_, float endValue_, float duration_, const Ease::Function fn_)
 {
-  return new Action(target_, endValue_, duration_, fn_);
+  return std::unique_ptr<Action>(new Action(target_, endValue_, duration_, fn_));
 }
 
-Action * Action::Make(Vec2 & target_, const Vec2 & endValue_, float duration_, const Ease::Function fn_)
+std::unique_ptr<Action> Action::Make(Vec2 & target_, const Vec2 & endValue_, float duration_, const Ease::Function fn_)
 {
-  return new Action(target_, endValue_, duration_, fn_);
+  return std::unique_ptr<Action>(new Action(target_, endValue_, duration_, fn_));
 }
 
-Action * Action::Make(Vec3 & target_, const Vec3 & endValue_, float duration_, const Ease::Function fn_)
+std::unique_ptr<Action> Action::Make(Vec3 & target_, const Vec3 & endValue_, float duration_, const Ease::Function fn_)
 {
-  return new Action(target_, endValue_, duration_, fn_);
+  return std::unique_ptr<Action>(new Action(target_, endValue_, duration_, fn_));
 }
 
-Action * Action::Make(Vec4 & target_, const Vec4 & endValue_, float duration_, const Ease::Function fn_)
+std::unique_ptr<Action> Action::Make(Vec4 & target_, const Vec4 & endValue_, float duration_, const Ease::Function fn_)
 {
-  return new Action(target_, endValue_, duration_, fn_);
+  return std::unique_ptr<Action>(new Action(target_, endValue_, duration_, fn_));
 }
   
 //*****************************************************************************
@@ -135,7 +135,10 @@ float Action::SpecializedUpdate(float dt)
   {
     //Update each of the floats inside the Vec and return
     for(size_t i = 0; i < vecSize; ++i)
-      target[i] = (*fn)(currentTime, startValue[i], displacement[i], duration);
+    {
+      float * toModify = reinterpret_cast<float *>(target) + i;
+      *toModify = (*fn)(currentTime, startValue[i], displacement[i], duration);
+    }
     return -1.f;
   }
 
@@ -145,7 +148,10 @@ float Action::SpecializedUpdate(float dt)
   
   //Avoid overstepping if dt is too large
   for(size_t i = 0; i < vecSize; ++i)
-    target[i] = endValue[i];  
+  {
+    float * toModify = reinterpret_cast<float *>(target) + i;
+    *toModify = endValue[i];
+  }
 
   //Return the leftover dt
   return currentTime - duration;

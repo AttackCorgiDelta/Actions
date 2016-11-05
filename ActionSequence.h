@@ -5,6 +5,7 @@
 #define ACTIONSEQUENCE_H
 
 #include <queue>        //queue
+#include <memory>
 #include "ActionBase.h" //ActionBase
 
 //Holds a number of pointers to ActionBases that are updated sequentially
@@ -12,11 +13,9 @@
 class ActionSequence final : public ActionBase
 {
 public:
-  static ActionSequence * Make();
+  static std::unique_ptr<ActionSequence> Make();
 
-  ~ActionSequence();
-
-  void Add(ActionBase * action);
+  void Add(std::unique_ptr<ActionBase> action);
 
 private:
   ActionSequence();
@@ -28,7 +27,7 @@ private:
   ActionSequence(const ActionSequence &) = delete;
   
   //Container of pointers to ActionBases to be updated 
-  std::queue<ActionBase *> actionBases; 
+  std::queue<std::unique_ptr<ActionBase>> actionBases; 
 };
 
 #endif //ACTIONSEQUENCE_H

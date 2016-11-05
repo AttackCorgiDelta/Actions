@@ -2,6 +2,7 @@
 //All content copyright (C) Griffin Downs 2016. All rights reserved.
 
 #include <cstdio>           //printf
+#include <memory>
 #include "Action.h"         //Action
 #include "ActionSequence.h" //ActionSequence
 #include "ActionGroup.h"    //ActionGroup
@@ -23,9 +24,9 @@ int main()
 //fn: Function used for easing
 void TestEase(Ease::Function fn)
 {
-  //Create a value, and an action to ease it to a target
+  //Create a value with an Action to ease it to a target
   float x = 0;
-  Action * action = Action::Make(x, 100.f, 1.f, fn);
+  std::unique_ptr<ActionBase> action = Action::Make(x, 100.f, 1.f, fn);
   
   const float dt = 1.f/60.f;
   float time = 0.f;
@@ -40,9 +41,6 @@ void TestEase(Ease::Function fn)
 
     time += dt;
   }
-
-  //Make sure we clean up our Action after creating it
-  delete action;
 }
 
 template <typename T>
@@ -51,7 +49,7 @@ void TestGroupOrSeq()
   float n1 = 0.f, n2 = 0.f;
 
   //Create a container that is in charge of easing n1 and n2
-  T * container = T::Make();
+  std::unique_ptr<T> container = T::Make();
   container->Add(Action::Make(n1, 100.f, 1.f, Ease::Linear));
   container->Add(Action::Make(n2, 100.f, 1.f, Ease::Linear));
 
@@ -68,8 +66,4 @@ void TestGroupOrSeq()
 
     time += dt;
   }
-  
-  //Because deletion of the two child Actions is handled by the container, we
-  //don't have to worry about deleting the two Actions
-  delete container;
 }

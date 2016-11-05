@@ -5,21 +5,13 @@
 
 //ActionGroup Static "Constructor" (public)
 //Dynamically allocates an ActionGroup
-ActionGroup * ActionGroup::Make()
+std::unique_ptr<ActionGroup> ActionGroup::Make()
 {
-  return new ActionGroup;
+  return std::unique_ptr<ActionGroup>(new ActionGroup);
 }
 
 //ActionGroup Constructor (private)
 ActionGroup::ActionGroup() : ActionBase() {}
-
-//ActionGroup Destructor
-//Deletes the memory pointed to by the contents of actionBases
-ActionGroup::~ActionGroup()
-{
-  for(ActionBase * action : actionBases)
-    delete action;
-}
 
 //Updates the ActionGroup by bringing it closer to the endValue
 //dt: Amount to Update the ActionGroup by
@@ -32,15 +24,12 @@ float ActionGroup::SpecializedUpdate(float dt)
   float leftoverDt = -1.f;
 
   //Update ActionBases via pointer in the list. Erase element if it is complete
-  std::list<ActionBase *>::iterator it = actionBases.begin();
+  std::list<std::unique_ptr<ActionBase>>::iterator it = actionBases.begin();
   while(it != actionBases.end())
   {
-    ActionBase * action = *it;
+    std::unique_ptr<ActionBase> & action = *it;
     if(action->IsComplete())
-    {
-      delete action; 
       it = actionBases.erase(it);
-    }
     else
     {
       leftoverDt = action->Update(dt);
@@ -61,10 +50,10 @@ float ActionGroup::SpecializedUpdate(float dt)
 //Pushes an ActionBase pointer into the ActionGroup 
 //and sets relevant paused/complete information
 //action: Pointer to the ActionBase to add
-void ActionGroup::Add(ActionBase * action)
+void ActionGroup::Add(std::unique_ptr<ActionBase> action)
 {
   SetPaused(false);
   SetComplete(false);
-  action->SetPaused(false);
-  actionBases.push_back(action);
+  actionBases.push_back(std::move(action));
+  actionBases.back()->SetPaused(false);
 }
