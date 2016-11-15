@@ -27,7 +27,7 @@ float ActionSequence::SpecializedUpdate(float dt)
     std::unique_ptr<ActionBase> & top = actionBases.front();
     dt = top->Update(dt);
 
-    //Pop and delete this ActionBase off of the queue if it's complete
+    //Pop this ActionBase off of the queue if it's complete
     if(top->IsComplete())
       actionBases.pop();
 

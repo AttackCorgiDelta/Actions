@@ -12,12 +12,12 @@
 namespace Ease
 {
 
-const float Pi = 4.f * std::atan(1.f);
+static const float Pi = 4.f * std::atan(1.f);
 
-//c: change in value
 //t: current time
-//d: duration
 //b: start value
+//c: change in value (total)
+//d: duration (total)
 
 //No acceleration
 float Linear(float t, float b, float c, float d)

@@ -7,7 +7,7 @@
 #include <cstddef>      //size_t
 #include <cmath>        //abs
 #include <cstring>      //memcpy
-#include <memory>
+#include <memory>       //unique_ptr
 #include "ActionBase.h" //ActionBase
 #include "Ease.h"       //Ease::Function
 #include "Vector.h"     //Vec2, Vec3, Vec4

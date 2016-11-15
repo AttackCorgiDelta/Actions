@@ -5,7 +5,7 @@
 #define ACTIONGROUP_H
 
 #include <list>         //list
-#include <memory>
+#include <memory>       //unique_ptr
 #include "ActionBase.h" //ActionBase
 
 //Holds a number of pointers to ActionBases which are all updated simultaneously

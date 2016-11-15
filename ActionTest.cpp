@@ -2,11 +2,11 @@
 //All content copyright (C) Griffin Downs 2016. All rights reserved.
 
 #include <cstdio>           //printf
-#include <memory>
+#include <memory>           //unique_ptr
 #include "Action.h"         //Action
 #include "ActionSequence.h" //ActionSequence
 #include "ActionGroup.h"    //ActionGroup
-#include "Ease.h"           //Ease::Function typedef, any Ease functions
+#include "Ease.h"           //Ease::Function typedef, Ease functions
 
 void TestEase(Ease::Function fn);
 

@@ -5,7 +5,7 @@
 #define ACTIONSEQUENCE_H
 
 #include <queue>        //queue
-#include <memory>
+#include <memory>       //unique_ptr
 #include "ActionBase.h" //ActionBase
 
 //Holds a number of pointers to ActionBases that are updated sequentially

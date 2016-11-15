@@ -10,17 +10,17 @@
 #ifndef EASE_H
 #define EASE_H
 
-#include <cmath>
+#include <cmath> //atan, sin, cos, pow, sqrt
 
 namespace Ease {
 
 //The form the functions in the Ease namespace take
-typedef float(*Function)(float, float, float, float);
+typedef float(* Function)(float, float, float, float);
 
 //t: current time
 //b: start value
-//c: delta time
-//d: duration
+//c: change in value (total)
+//d: duration (total)
 
 float Linear(float t, float b, float c, float d);
 
